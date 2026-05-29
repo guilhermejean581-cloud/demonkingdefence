@@ -36,7 +36,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>com.mycompany.demonkingdefence.App</mainClass>
+                    <mainClass>demonkingdefence.Main</mainClass>
                 </configuration>
                 <executions>
                     <execution>

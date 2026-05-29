@@ -1,7 +1,11 @@
-module com.mycompany.demonkingdefence {
+module DemonKingDefence {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
-    opens com.mycompany.demonkingdefence to javafx.fxml;
+    opens demonkingdefence to javafx.fxml;
     exports demonkingdefence;
+
+    opens controller to javafx.fxml;
+    exports controller;
 }
