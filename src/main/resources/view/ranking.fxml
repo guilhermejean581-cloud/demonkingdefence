@@ -9,18 +9,23 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RankingController">
    <children>
-      <VBox alignment="CENTER" layoutX="150.0" layoutY="50.0" prefHeight="500.0" prefWidth="500.0" spacing="20.0">
+      <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#acaovoltar" prefHeight="40.0" prefWidth="100.0" text="voltar" />
+      <HBox layoutX="100.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" spacing="20.0">
          <children>
-            <Label style="-fx-font-size: 28px;" text="Ranking dos Reis Demonios" />
-            <ListView fx:id="listajogadores" prefHeight="350.0" prefWidth="500.0" />
-            <HBox alignment="CENTER" spacing="20.0">
+            <VBox prefHeight="400.0" prefWidth="350.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#acaoexportarcsv" prefHeight="40.0" prefWidth="120.0" text="Exportar CSV" />
-                  <Button mnemonicParsing="false" onAction="#acaoexportartxt" prefHeight="40.0" prefWidth="120.0" text="Exportar TXT" />
-                  <Button mnemonicParsing="false" onAction="#acaovoltar" prefHeight="40.0" prefWidth="120.0" text="Voltar" />
+                  <Label style="-fx-font-size: 24px;" text="top personagens" />
+                  <ListView fx:id="listajogadores" prefHeight="300.0" prefWidth="350.0" />
+                  <Button mnemonicParsing="false" onAction="#acaodeletar" prefHeight="40.0" prefWidth="350.0" text="deletar personagem" />
                </children>
-            </HBox>
+            </VBox>
+            <VBox prefHeight="400.0" prefWidth="230.0" spacing="10.0">
+               <children>
+                  <Label style="-fx-font-size: 24px;" text="estatisticas" />
+                  <Label fx:id="labeldetalhes" alignment="TOP_LEFT" prefHeight="300.0" prefWidth="230.0" style="-fx-border-color: gray; -fx-padding: 10px; -fx-font-size: 14px;" text="selecione um personagem..." wrapText="true" />
+               </children>
+            </VBox>
          </children>
-      </VBox>
+      </HBox>
    </children>
 </AnchorPane>

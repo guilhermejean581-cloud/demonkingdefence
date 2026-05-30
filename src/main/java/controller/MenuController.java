@@ -20,7 +20,7 @@ public class MenuController {
     @FXML
     public void acaojogar(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/gameplay.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/selecaopersonagem.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -32,7 +32,15 @@ public class MenuController {
 
     @FXML
     public void acaoranking(ActionEvent event) {
-        System.out.println("abrindo o ranking");
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/ranking.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
