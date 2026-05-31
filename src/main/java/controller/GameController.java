@@ -6,7 +6,6 @@ import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -30,12 +29,23 @@ public class GameController {
     private boolean maldicaolich = false;
     private int turnostempestade = 0;
     private int danoreduzido = 0;
+    
+    private int usosmagia = 5;
+    private int usosh1 = 3;
+    private int usosh2 = 3;
+    private int usosfuga = 2;
 
     @FXML
     public void initialize() {
         vidaatualplayer = player.getvidamaxima();
         ondaatual = gerenciadorondas.getonda(SelecaoOndaController.ondaselecionada);
         indexinimigo = 0;
+        
+        usosmagia = 5;
+        usosh1 = 3;
+        usosh2 = 3;
+        usosfuga = 2;
+        
         btnproximaonda.setVisible(false);
         btnirparaloja.setVisible(false);
         textlogbatalha.setText("a batalha comecou.\n");
@@ -59,21 +69,57 @@ public class GameController {
     }
 
     @FXML public void acaoataquebasico(ActionEvent e) { executarturno("espada antiga"); }
-    @FXML public void acaoataquemagico(ActionEvent e) { executarturno("bola de fogo"); }
-    @FXML public void acaohabilidade1(ActionEvent e) { executarturno(player.getsloth1()); }
-    @FXML public void acaohabilidade2(ActionEvent e) { executarturno(player.getsloth2()); }
+    
+    @FXML public void acaoataquemagico(ActionEvent e) { 
+        if (usosmagia > 0) {
+            usosmagia--;
+            executarturno("bola de fogo");
+        } else {
+            textlogbatalha.appendText("sem usos para a magia bola de fogo!\n");
+        }
+    }
+    
+    @FXML public void acaohabilidade1(ActionEvent e) { 
+        if (!player.getsloth1().equals("vazio") && usosh1 > 0) {
+            usosh1--;
+            executarturno(player.getsloth1());
+        } else if (usosh1 <= 0) {
+            textlogbatalha.appendText("sem usos para " + player.getsloth1() + "!\n");
+        }
+    }
+    
+    @FXML public void acaohabilidade2(ActionEvent e) { 
+        if (!player.getsloth2().equals("vazio") && usosh2 > 0) {
+            usosh2--;
+            executarturno(player.getsloth2());
+        } else if (usosh2 <= 0) {
+            textlogbatalha.appendText("sem usos para " + player.getsloth2() + "!\n");
+        }
+    }
     
     @FXML public void acaofugir(ActionEvent e) {
-        textlogbatalha.appendText("fuga mal sucedida.\n");
-        turnoinimigos();
-        fimdeturno();
+        if (usosfuga > 0) {
+            usosfuga--;
+            if (Math.random() < 0.5) {
+                textlogbatalha.appendText("fuga bem sucedida! reiniciando onda.\n");
+                trocartela("/view/gameplay.fxml");
+            } else {
+                textlogbatalha.appendText("falha ao fugir.\n");
+                turnoinimigos();
+                fimdeturno();
+            }
+        } else {
+            textlogbatalha.appendText("ja nao tens mais tentativas de fuga!\n");
+        }
     }
 
     private void executarturno(String acao) {
         if (inimigoatual == null || acao.equals("vazio")) return;
+        
+        heroi alvo = inimigoatual;
         boolean inimigoatacou = false;
         
-        if (inimigoatual.isatacaprimeiro()) {
+        if (alvo.isatacaprimeiro()) {
             turnoinimigos();
             inimigoatacou = true;
         }
@@ -82,7 +128,7 @@ public class GameController {
             processaracaoplayer(acao);
         }
 
-        if (inimigoatual != null && inimigoatual.getvida() > 0 && !inimigoatacou) {
+        if (inimigoatual == alvo && inimigoatual != null && inimigoatual.getvida() > 0 && !inimigoatacou) {
             turnoinimigos();
         }
 
@@ -100,7 +146,6 @@ public class GameController {
         else if (acao.equals("cura")) { 
             if (!maldicaolich) vidaatualplayer = Math.min(player.getvidamaxima(), vidaatualplayer + (player.getvidamaxima() / 5)); 
             textlogbatalha.appendText("curou vida.\n"); 
-            atualizarinterface();
             return; 
         }
         else if (acao.equals("tempestade de fogo")) { dano = 80; magico = true; }
@@ -111,7 +156,6 @@ public class GameController {
         else if (acao.equals("restauracao")) { 
             if (!maldicaolich) vidaatualplayer = Math.min(player.getvidamaxima(), vidaatualplayer + (int)(player.getvidamaxima() * 0.4)); 
             textlogbatalha.appendText("restaurou vida.\n"); 
-            atualizarinterface();
             return; 
         }
         else if (acao.equals("aprimoramento")) { playerbuffado = true; turnosbuff = 3; textlogbatalha.appendText("status aprimorados.\n"); return; }
@@ -134,7 +178,14 @@ public class GameController {
     private void verificarmorteinimigo() {
         if (inimigoatual.getvida() <= 0) {
             textlogbatalha.appendText(inimigoatual.getclasse() + " derrotado.\n");
+            
             player.addpontos(inimigoatual.getpontos());
+            player.ganharyen(inimigoatual.getpontos());
+            
+            int xpganho = 50 * SelecaoOndaController.ondaselecionada;
+            if (player.ganharxp(xpganho)) {
+                textlogbatalha.appendText("subiu de nivel! nivel: " + player.getnivel() + "\n");
+            }
             
             if (Math.random() * 100 < inimigoatual.getchancedrop()) {
                 dropsdaonda.add(inimigoatual.getdrop());
@@ -185,7 +236,9 @@ public class GameController {
         vidaatualplayer -= Math.max(1, danoinimigo);
         textlogbatalha.appendText("inimigo causou " + danoinimigo + " de dano.\n");
         
-        if (vidaatualplayer <= 0) trocartela(new ActionEvent(), "/view/morte.fxml");
+        if (vidaatualplayer <= 0) {
+            trocartela("/view/morte.fxml");
+        }
     }
 
     private void fimdeturno() {
@@ -213,24 +266,37 @@ public class GameController {
         labelonda.setText("onda: " + SelecaoOndaController.ondaselecionada);
         labelyen.setText("pontos: " + player.getpontosdemoniacos());
         labelvidaplayer.setText("hp: " + Math.max(0, vidaatualplayer) + " / " + player.getvidamaxima());
-        btnhabilidade1.setText(player.getsloth1());
-        btnhabilidade2.setText(player.getsloth2());
+        
+        btnataquemagico.setText("bola de fogo (" + usosmagia + "/5)");
+        
+        if (!player.getsloth1().equals("vazio")) btnhabilidade1.setText(player.getsloth1() + " (" + usosh1 + ")");
+        else btnhabilidade1.setText("vazio");
+        
+        if (!player.getsloth2().equals("vazio")) btnhabilidade2.setText(player.getsloth2() + " (" + usosh2 + ")");
+        else btnhabilidade2.setText("vazio");
+        
+        btnfugir.setText("fugir (" + usosfuga + "/2)");
+        
+        barrahpplayer.setProgress((double) Math.max(0, vidaatualplayer) / player.getvidamaxima());
+        
         if (inimigoatual != null) {
             labelnomeinimigo.setText("inimigo: " + inimigoatual.getclasse());
             labelvidainimigo.setText("hp: " + Math.max(0, inimigoatual.getvida()) + " / " + vidamaximainimigo);
-            barrahpinimigo.setProgress(Math.max(0, inimigoatual.getvida()) / (double) vidamaximainimigo);
+            barrahpinimigo.setProgress((double) Math.max(0, inimigoatual.getvida()) / vidamaximainimigo);
         }
         barraxp.setProgress((double) player.getxp() / (player.getnivel() * 100));
         barracargainimigo.setProgress(0.0);
     }
 
-    private void trocartela(ActionEvent e, String fxml) {
+    private void trocartela(String fxml) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxml));
-            Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            Stage stage = (Stage) labelonda.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 600));
             stage.show();
-        } catch (IOException ex) { }
+        } catch (Exception ex) { 
+            ex.printStackTrace(); 
+        }
     }
 
     private void desativarbotoes() {
@@ -244,8 +310,11 @@ public class GameController {
     @FXML public void acaoproximaonda(ActionEvent e) { 
         if (SelecaoOndaController.ondaselecionada < 6) {
             SelecaoOndaController.ondaselecionada++;
-            trocartela(e, "/view/gameplay.fxml");
+            trocartela("/view/gameplay.fxml");
         }
     }
-    @FXML public void acaoirparaloja(ActionEvent e) { trocartela(e, "/view/loja.fxml"); }
+    
+    @FXML public void acaoirparaloja(ActionEvent e) { 
+        trocartela("/view/loja.fxml"); 
+    }
 }
