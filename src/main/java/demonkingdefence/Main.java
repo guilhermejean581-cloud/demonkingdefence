@@ -1,4 +1,3 @@
-
 package demonkingdefence;
 
 import javafx.application.Application;
