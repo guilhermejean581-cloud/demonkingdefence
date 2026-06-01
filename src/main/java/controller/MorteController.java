@@ -14,7 +14,7 @@ public class MorteController {
     @FXML
     public void acaovoltarhub(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/menu.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/selecaoonda.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

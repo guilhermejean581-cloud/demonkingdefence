@@ -35,3 +35,14 @@
                     </VBox>
                     <VBox prefWidth="300.0" spacing="10.0" style="-fx-background-color: #e0e0e0; -fx-padding: 15;">
                           <children>
+                              <Label style="-fx-font-weight: bold;" text="--- itens ---" />
+                              <ListView fx:id="listainventario" prefHeight="350.0" prefWidth="250.0" />
+                              <Button mnemonicParsing="false" onAction="#acaoequipar" prefHeight="40.0" prefWidth="250.0" text="equipar selecionado" />
+                          </children>
+                    </VBox>
+                </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
