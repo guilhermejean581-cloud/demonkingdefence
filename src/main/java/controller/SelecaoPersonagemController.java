@@ -29,6 +29,7 @@ public class SelecaoPersonagemController {
     public static int[] mortes = {0, 0, 0, 0};
     public static int[] heroisderrotados = {0, 0, 0, 0};
     public static int[] chefesderrotados = {0, 0, 0, 0};
+    public static int[] niveis = {1, 1, 1, 1}; 
     public static int slotativo = 0;
 
     @FXML
@@ -53,6 +54,8 @@ public class SelecaoPersonagemController {
                     if (linhaherois != null) heroisderrotados[i] = Integer.parseInt(linhaherois);
                     String linhachefes = br.readLine();
                     if (linhachefes != null) chefesderrotados[i] = Integer.parseInt(linhachefes);
+                    String linhanivel = br.readLine();
+                    if (linhanivel != null && !linhanivel.isEmpty()) niveis[i] = Integer.parseInt(linhanivel);
                 }
                 br.close();
             }
@@ -69,16 +72,17 @@ public class SelecaoPersonagemController {
                 bw.write(String.valueOf(mortes[i])); bw.newLine();
                 bw.write(String.valueOf(heroisderrotados[i])); bw.newLine();
                 bw.write(String.valueOf(chefesderrotados[i])); bw.newLine();
+                bw.write(String.valueOf(niveis[i])); bw.newLine();
             }
             bw.close();
         } catch (IOException e) { }
     }
 
     private void atualizarbotoes() {
-        btnSlot1.setText(!nomes[0].isEmpty() ? nomes[0] + " - nv. " + ondasliberadas[0] : "criar personagem");
-        btnSlot2.setText(!nomes[1].isEmpty() ? nomes[1] + " - nv. " + ondasliberadas[1] : "criar personagem");
-        btnSlot3.setText(!nomes[2].isEmpty() ? nomes[2] + " - nv. " + ondasliberadas[2] : "criar personagem");
-        btnSlot4.setText(!nomes[3].isEmpty() ? nomes[3] + " - nv. " + ondasliberadas[3] : "criar personagem");
+        btnSlot1.setText(!nomes[0].isEmpty() ? nomes[0] + " - nv. " + niveis[0] + " - onda " + ondasliberadas[0] : "criar personagem");
+        btnSlot2.setText(!nomes[1].isEmpty() ? nomes[1] + " - nv. " + niveis[1] + " - onda " + ondasliberadas[1] : "criar personagem");
+        btnSlot3.setText(!nomes[2].isEmpty() ? nomes[2] + " - nv. " + niveis[2] + " - onda " + ondasliberadas[2] : "criar personagem");
+        btnSlot4.setText(!nomes[3].isEmpty() ? nomes[3] + " - nv. " + niveis[3] + " - onda " + ondasliberadas[3] : "criar personagem");
     }
 
     @FXML public void acaoSlot1(ActionEvent e) { processarslot(0, e); }
@@ -95,11 +99,14 @@ public class SelecaoPersonagemController {
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent() && !result.get().isEmpty()) {
                 nomes[index] = result.get();
+                niveis[index] = 1;
+                ondasliberadas[index] = 1;
                 salvardados();
                 atualizarbotoes();
             }
         } else {
             slotativo = index;
+            model.player.getinstancia().setnivel(niveis[index]); 
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/view/selecaoonda.fxml"));
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -120,7 +127,7 @@ public class SelecaoPersonagemController {
             String nomedigitado = result.get();
             for (int i = 0; i < 4; i++) {
                 if (nomes[i].equals(nomedigitado)) {
-                    nomes[i] = ""; ondasliberadas[i] = 1;
+                    nomes[i] = ""; ondasliberadas[i] = 1; niveis[i] = 1;
                     mortes[i] = 0; heroisderrotados[i] = 0; chefesderrotados[i] = 0;
                     salvardados();
                     atualizarbotoes();

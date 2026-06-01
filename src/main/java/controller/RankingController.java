@@ -33,13 +33,19 @@ public class RankingController {
         listajogadores.getItems().clear();
         for (int i = 0; i < 4; i++) {
             if (!SelecaoPersonagemController.nomes[i].isEmpty()) {
-                listajogadores.getItems().add(SelecaoPersonagemController.nomes[i] + " - onda " + SelecaoPersonagemController.ondasliberadas[i]);
+                listajogadores.getItems().add(SelecaoPersonagemController.nomes[i] + " - nv. " + SelecaoPersonagemController.niveis[i] + " - onda " + SelecaoPersonagemController.ondasliberadas[i]);
             }
         }
         
         listajogadores.getItems().sort((s1, s2) -> {
             int onda1 = Integer.parseInt(s1.split(" - onda ")[1]);
             int onda2 = Integer.parseInt(s2.split(" - onda ")[1]);
+            
+            if (onda1 == onda2) {
+                int nv1 = Integer.parseInt(s1.split(" - nv. ")[1].split(" - ")[0]);
+                int nv2 = Integer.parseInt(s2.split(" - nv. ")[1].split(" - ")[0]);
+                return Integer.compare(nv2, nv1); 
+            }
             return Integer.compare(onda2, onda1); 
         });
 
@@ -50,7 +56,7 @@ public class RankingController {
     }
 
     private void mostrardetalhes(String textolista) {
-        String nome = textolista.split(" - onda ")[0];
+        String nome = textolista.split(" - nv. ")[0];
         for (int i = 0; i < 4; i++) {
             if (SelecaoPersonagemController.nomes[i].equals(nome)) {
                 String detalhes = "mortes: " + SelecaoPersonagemController.mortes[i] + "\n" +
@@ -66,11 +72,12 @@ public class RankingController {
     public void acaodeletar(ActionEvent event) {
         String selecionado = listajogadores.getSelectionModel().getSelectedItem();
         if (selecionado != null && !selecionado.equals("nenhum personagem criado")) {
-            String nomedeletar = selecionado.split(" - onda ")[0];
+            String nomedeletar = selecionado.split(" - nv. ")[0];
             for (int i = 0; i < 4; i++) {
                 if (SelecaoPersonagemController.nomes[i].equals(nomedeletar)) {
                     SelecaoPersonagemController.nomes[i] = "";
                     SelecaoPersonagemController.ondasliberadas[i] = 1;
+                    SelecaoPersonagemController.niveis[i] = 1;
                     SelecaoPersonagemController.mortes[i] = 0;
                     SelecaoPersonagemController.heroisderrotados[i] = 0;
                     SelecaoPersonagemController.chefesderrotados[i] = 0;

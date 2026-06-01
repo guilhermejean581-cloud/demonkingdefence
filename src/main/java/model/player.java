@@ -5,62 +5,59 @@ import java.util.List;
 
 public class player {
     private static player instancia;
+    private int hp = 10;
     private int vidamaxima = 100;
-    private int atf = 10;
-    private int atm = 10;
+    private int atf = 1;
+    private int atm = 1;
+    private int defesa = 1;
+    private int nivel = 1;
+    private int pontosdemoniacos = 0;
     private String sloth1 = "bola de fogo";
     private String sloth2 = "vazio";
-    private int nivel = 1;
-    private int yen = 0;
-    private int xp = 0;
-    private int pontosdemoniacos = 0;
-    private List<String> inventario = new ArrayList<>();
+    private String armaequipada = "espada antiga";
+    private List<String> armas = new ArrayList<>();
     private List<String> magias = new ArrayList<>();
+    private List<String> pocoes = new ArrayList<>();
 
     public static player getinstancia() {
         if (instancia == null) {
             instancia = new player();
+            instancia.armas.add("espada antiga");
             instancia.magias.add("bola de fogo");
         }
         return instancia;
     }
 
+    public int gethp() { return hp; }
+    public void sethp(int v) { this.hp = v; this.vidamaxima = v * 10; }
     public int getvidamaxima() { return vidamaxima; }
     public int getatf() { return atf; }
+    public void setatf(int v) { this.atf = v; }
     public int getatm() { return atm; }
-    public String getsloth1() { return sloth1; }
-    public String getsloth2() { return sloth2; }
-    public void equiparslot1(String m) { this.sloth1 = m; }
-    public void equiparslot2(String m) { this.sloth2 = m; }
+    public void setatm(int v) { this.atm = v; }
+    public int getdefesa() { return defesa; }
+    public void setdefesa(int v) { this.defesa = v; }
     public int getnivel() { return nivel; }
-    public int getyen() { return yen; }
-    public int getxp() { return xp; }
+    public void setnivel(int v) { this.nivel = v; }
     public int getpontosdemoniacos() { return pontosdemoniacos; }
-    public void addpontos(int p) { this.pontosdemoniacos += p; }
-    public List<String> getinventario() { return inventario; }
+    public void addpontos(int v) { this.pontosdemoniacos += v; }
+    
+    public boolean gastarpontos(int v) {
+        if(this.pontosdemoniacos >= v) { this.pontosdemoniacos -= v; return true; }
+        return false;
+    }
+
+    public String getsloth1() { return sloth1; }
+    public void equiparslot1(String m) { this.sloth1 = m; }
+    public String getsloth2() { return sloth2; }
+    public void equiparslot2(String m) { this.sloth2 = m; }
+    public String getarmaequipada() { return armaequipada; }
+    public void setarmaequipada(String a) { this.armaequipada = a; }
+    
+    public List<String> getarmas() { return armas; }
+    public void addarma(String a) { if(!armas.contains(a)) armas.add(a); }
     public List<String> getmagias() { return magias; }
-
-    public void additem(String item) { this.inventario.add(item); }
-    public void addmagia(String magia) { if (!this.magias.contains(magia)) this.magias.add(magia); }
-
-    public boolean gastaryen(int valor) {
-        if (this.yen >= valor) {
-            this.yen -= valor;
-            return true;
-        }
-        return false;
-    }
-    public void ganharyen(int valor) { this.yen += valor; }
-    public boolean ganharxp(int valor) {
-        this.xp += valor;
-        if (this.xp >= this.nivel * 100) {
-            this.xp -= this.nivel * 100;
-            this.nivel++;
-            this.vidamaxima += 20;
-            this.atf += 5;
-            this.atm += 5;
-            return true;
-        }
-        return false;
-    }
+    public void addmagia(String m) { if(!magias.contains(m)) magias.add(m); }
+    public List<String> getpocoes() { return pocoes; }
+    public void addpocao(String p) { pocoes.add(p); }
 }

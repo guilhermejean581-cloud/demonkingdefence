@@ -20,26 +20,45 @@ public class InventarioController {
     @FXML public void initialize() { atualizarinterface(); }
 
     @FXML public void clicarboladefogo(ActionEvent e) {
-        if (player.getmagias().contains("bola de fogo")) solicitarescolhadeslot("bola de fogo");
-    }
-
-    private void solicitarescolhadeslot(String magia) {
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("slot 1", "slot 1", "slot 2");
-        dialog.setTitle("equipar");
-        dialog.setContentText("escolha o slot:");
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(slot -> {
-            if (slot.equals("slot 1")) player.equiparslot1(magia);
-            else player.equiparslot2(magia);
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("equipar arma", "equipar arma", "equipar magia 1", "equipar magia 2", "upar status (100 pontos)");
+        dialog.setTitle("gerenciar");
+        dialog.setHeaderText(null);
+        dialog.setContentText("o que deseja fazer?");
+        Optional<String> res = dialog.showAndWait();
+        res.ifPresent(escolha -> {
+            if(escolha.equals("equipar arma")) {
+                ChoiceDialog<String> d2 = new ChoiceDialog<>(player.getarmas().get(0), player.getarmas());
+                d2.showAndWait().ifPresent(w -> player.setarmaequipada(w));
+            } else if(escolha.equals("equipar magia 1")) {
+                ChoiceDialog<String> d2 = new ChoiceDialog<>(player.getmagias().get(0), player.getmagias());
+                d2.showAndWait().ifPresent(m -> player.equiparslot1(m));
+            } else if(escolha.equals("equipar magia 2")) {
+                ChoiceDialog<String> d2 = new ChoiceDialog<>(player.getmagias().get(0), player.getmagias());
+                d2.showAndWait().ifPresent(m -> player.equiparslot2(m));
+            } else if(escolha.equals("upar status (100 pontos)")) {
+                if(player.gastarpontos(100)) {
+                    ChoiceDialog<String> d2 = new ChoiceDialog<>("hp", "hp", "atf", "atm", "defesa");
+                    d2.showAndWait().ifPresent(s -> {
+                        if(s.equals("hp")) player.sethp(player.gethp() + 8);
+                        else if(s.equals("atf")) player.setatf(player.getatf() + 8);
+                        else if(s.equals("atm")) player.setatm(player.getatm() + 8);
+                        else if(s.equals("defesa")) player.setdefesa(Math.min(80, player.getdefesa() + 8));
+                        player.setnivel(player.getnivel() + 1);
+                        
+                        SelecaoPersonagemController.niveis[SelecaoPersonagemController.slotativo] = player.getnivel();
+                        SelecaoPersonagemController.salvardados();
+                    });
+                }
+            }
             atualizarinterface();
         });
     }
 
     private void atualizarinterface() {
-        labelslot1.setText("slot 1: " + player.getsloth1());
-        labelslot2.setText("slot 2: " + player.getsloth2());
-        labelyen.setText("dinheiro: " + player.getyen() + " yen");
-        labelnivelxp.setText("nivel: " + player.getnivel() + " (xp: " + player.getxp() + "/" + (player.getnivel()*100) + ")");
+        labelslot1.setText("arma: " + player.getarmaequipada());
+        labelslot2.setText("m1: " + player.getsloth1() + " | m2: " + player.getsloth2());
+        labelyen.setText("pontos: " + player.getpontosdemoniacos());
+        labelnivelxp.setText("nivel: " + player.getnivel() + " (hp:" + player.getvidamaxima() + " atf:" + player.getatf() + " atm:" + player.getatm() + " def:" + player.getdefesa() + ")");
     }
 
     @FXML public void acaovoltar(ActionEvent e) {
