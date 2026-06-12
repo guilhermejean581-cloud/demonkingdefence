@@ -32,6 +32,13 @@ public class GameController {
     private int castarmeteoro = 0;
     private int danoreduzido = 0;
 
+    private int cdespecial = 0;
+    private int cdhabilidade1 = 0;
+    private int cdhabilidade2 = 0;
+    private int turnosbonusfisico = 0;
+    private int turnosgerais = 0;
+    private int turnosprofecia = 0;
+
     @FXML public void initialize() {
         vidaatualplayer = player.getvidamaxima();
         ondaatual = gerenciadorondas.getonda(SelecaoOndaController.ondaselecionada);
@@ -60,14 +67,44 @@ public class GameController {
                 else player.addmagia(d);
             }
             dropsdaonda.clear();
+            SelecaoPersonagemController.salvardados();
         }
         atualizarinterface();
     }
 
     @FXML public void acaoataquebasico(ActionEvent e) { executarturno("ataque_basico"); }
-    @FXML public void acaoataquemagico(ActionEvent e) { executarturno("ataque_especial"); }
-    @FXML public void acaohabilidade1(ActionEvent e) { executarturno(player.getsloth1()); }
-    @FXML public void acaohabilidade2(ActionEvent e) { executarturno(player.getsloth2()); }
+    
+    @FXML public void acaoataquemagico(ActionEvent e) { 
+        if (!player.temespecialdesbloqueado(player.getarmaequipada())) {
+            textlogbatalha.appendText("ataque especial bloqueado. use pontos demoniacos no inventario para desbloquear.\n");
+            return;
+        }
+        if (cdespecial > 0) {
+            textlogbatalha.appendText("ataque especial em recarga por " + cdespecial + " turnos.\n");
+            return;
+        }
+        executarturno("ataque_especial"); 
+    }
+    
+    @FXML public void acaohabilidade1(ActionEvent e) { 
+        String h = player.getsloth1();
+        if(h.equals("vazio")) return;
+        if (cdhabilidade1 > 0) {
+            textlogbatalha.appendText(h + " em recarga por " + cdhabilidade1 + " turnos.\n");
+            return;
+        }
+        executarturno(h); 
+    }
+    
+    @FXML public void acaohabilidade2(ActionEvent e) { 
+        String h = player.getsloth2();
+        if(h.equals("vazio")) return;
+        if (cdhabilidade2 > 0) {
+            textlogbatalha.appendText(h + " em recarga por " + cdhabilidade2 + " turnos.\n");
+            return;
+        }
+        executarturno(h); 
+    }
     
     @FXML public void acaofugir(ActionEvent e) {
         if(player.getpocoes().isEmpty()) { textlogbatalha.appendText("sem pocoes.\n"); return; }
@@ -79,6 +116,7 @@ public class GameController {
             else if(pocao.equals("pocao de dano fisico")) bufffisico = true;
             else if(pocao.equals("pocao de dano magico")) buffmagico = true;
             textlogbatalha.appendText("usou " + pocao + ".\n");
+            SelecaoPersonagemController.salvardados();
             turnoinimigos();
             fimdeturno();
         });
@@ -109,26 +147,79 @@ public class GameController {
         else if(arma.equals("espada sagrada")) basearma = 80;
         else if(arma.equals("arco sagrado")) basearma = 75;
 
-        double multf = 1.0 + (player.getatf() / 100.0);
-        double multm = 1.0 + (player.getatm() / 100.0);
+        double multf = 1.0 + (player.getatf() * 0.15);
+        double multm = 1.0 + (player.getatm() * 0.15);
+        
         if(bufffisico) multf += 0.3;
         if(buffmagico) multm += 0.3;
         if(turnosbuffaprimoramento > 0) { multf += 0.5; multm += 0.5; }
+        if(turnosbonusfisico > 0) { multf += 0.4; }
+
+        if (acao.equals("ataque_especial")) {
+            if (arma.equals("espada antiga")) cdespecial = 1;
+            else if (arma.equals("arco rapido")) cdespecial = 2;
+            else cdespecial = 2;
+        } else if (acao.equals(player.getsloth1())) {
+            cdhabilidade1 = 2;
+        } else if (acao.equals(player.getsloth2())) {
+            cdhabilidade2 = 2;
+        }
+
+        if (arma.equals("arco rapido") && acao.equals("ataque_especial")) {
+            for (int h = 0; h < 3; h++) {
+                if (inimigoatual != null && inimigoatual.getvida() > 0) {
+                    int d = (int)(basearma * multf * 0.6);
+                    inimigoatual.receberdano(d);
+                    textlogbatalha.appendText("arco rapido sequencial causou " + d + " de dano.\n");
+                    verificarmorteinimigo();
+                }
+            }
+            return;
+        }
+
+        if (arma.equals("arco magico") && acao.equals("ataque_especial")) {
+            for (int h = 0; h < 2; h++) {
+                if (inimigoatual != null && inimigoatual.getvida() > 0) {
+                    int d = (int)(basearma * (multf + (player.getatm() * 0.15)) * 0.8);
+                    inimigoatual.receberdano(d);
+                    textlogbatalha.appendText("arco magico sequencial causou " + d + " de dano.\n");
+                    verificarmorteinimigo();
+                }
+            }
+            return;
+        }
 
         int dano = 0;
         boolean magico = false;
 
         if(acao.equals("ataque_basico")) {
             dano = (int)(basearma * multf);
-            if(arma.equals("arco magico")) dano = (int)(basearma * (multf + (player.getatm()/100.0)));
+            if(arma.equals("arco magico")) dano = (int)(basearma * (multf + (player.getatm() * 0.15)));
         } else if(acao.equals("ataque_especial")) {
             if(arma.equals("espada antiga")) { dano = (int)(basearma * multf * 2); }
-            else if(arma.equals("machado de guerra")) { dano = (int)(basearma * multf * 1.5); }
-            else if(arma.equals("arco rapido")) { dano = (int)(basearma * multf * 1.5); }
-            else if(arma.equals("espada de honra")) { dano = (int)(basearma * multf); }
-            else if(arma.equals("espada nobre")) { dano = (int)(basearma * multf); if(inimigoatual.getvida() < vidamaximainimigo * 0.3) dano *= 2; }
-            else if(arma.equals("arco magico")) { dano = (int)(basearma * multf); }
-            else if(arma.equals("espada sagrada")) { dano = (int)(basearma * multf); }
+            else if(arma.equals("machado de guerra")) { 
+                dano = (int)(basearma * multf * 1.5); 
+                player.setdefesa(player.getdefesa() + 1);
+                textlogbatalha.appendText("machado de guerra aumentou passivamente sua defesa.\n");
+            }
+            else if(arma.equals("espada de honra")) { 
+                dano = (int)(basearma * multf); 
+                turnosbonusfisico = 2;
+                textlogbatalha.appendText("espada de honra ativou bonus fisico por 2 rounds.\n");
+            }
+            else if(arma.equals("espada nobre")) { 
+                dano = (int)(basearma * multf); 
+                if(inimigoatual.getvida() < vidamaximainimigo * 0.3) dano *= 2; 
+                int h = (int)(dano * 0.3);
+                curarplayer(h);
+                textlogbatalha.appendText("espada nobre regenerou " + h + " hp.\n");
+            }
+            else if(arma.equals("espada sagrada")) { 
+                dano = (int)(basearma * multf); 
+                int h = (int)(dano * 0.5);
+                curarplayer(h);
+                textlogbatalha.appendText("espada sagrada regenerou " + h + " hp.\n");
+            }
             else if(arma.equals("arco sagrado")) { dano = (int)(basearma * multf * 2); }
         } else if(acao.equals("bola de fogo")) { dano = (int)(25 * multm); magico = true; }
         else if(acao.equals("missil de mana")) { dano = (int)(35 * multm); magico = true; }
@@ -159,52 +250,27 @@ public class GameController {
     }
 
     private void verificarmorteinimigo() {
+        if (inimigoatual == null) return;
         if (inimigoatual.getvida() <= 0) {
             textlogbatalha.appendText("derrotado.\n");
             player.addpontos(inimigoatual.getpontos());
             
-            String c = inimigoatual.getclasse();
-            double r = Math.random() * 100;
-            if(c.equals("guerreiro") && r < 5) dropsdaonda.add("machado de guerra");
-            else if(c.equals("arqueiro") && r < 5) dropsdaonda.add("arco rapido");
-            else if(c.equals("cavaleiro") && r < 5) dropsdaonda.add("espada de honra");
-            else if(c.equals("mago de fogo") && r < 5) dropsdaonda.add("explosao");
-            else if(c.equals("mago de gelo") && r < 5) dropsdaonda.add("tempestade de gelo");
-            else if(c.equals("mago de vento") && r < 5) dropsdaonda.add("tornado");
-            else if(c.equals("cavaleiro nobre") && r < 10) dropsdaonda.add("espada nobre");
-            else if(c.equals("principe elfico") && r < 10) dropsdaonda.add("arco magico");
-            else if(c.equals("santa") && r < 10) dropsdaonda.add("restauracao");
-            else if(c.equals("heroi da profecia") && r < 10) dropsdaonda.add("espada sagrada");
-            else if(c.equals("arquimago") && r < 10) dropsdaonda.add("aprimoramento");
-            else if(c.equals("arqueiro sagrado") && r < 10) dropsdaonda.add("arco sagrado");
-            else if(c.equals("lich") && r < 10) dropsdaonda.add("maldicao");
-            else if(c.equals("guardiao do mundo") && r < 50) dropsdaonda.add("elixir da vida");
-            else if(c.equals("deusa")) dropsdaonda.add("coracao divino");
-
             if (inimigoatual instanceof chefe) {
-                textlogbatalha.appendText("onda limpa.\n");
-                
+                player.addouro(100);
+                textlogbatalha.appendText("chefe derrotado. ganhou 100 de ouro.\n");
                 SelecaoPersonagemController.chefesderrotados[SelecaoPersonagemController.slotativo]++;
                 if (SelecaoOndaController.ondaselecionada >= SelecaoPersonagemController.ondasliberadas[SelecaoPersonagemController.slotativo]) {
                     SelecaoPersonagemController.ondasliberadas[SelecaoPersonagemController.slotativo] = SelecaoOndaController.ondaselecionada + 1;
                 }
                 SelecaoPersonagemController.niveis[SelecaoPersonagemController.slotativo] = player.getnivel();
-                SelecaoPersonagemController.salvardados();
-
                 inimigoatual = null;
                 btnproximaonda.setVisible(true);
                 btnirparaloja.setVisible(true);
                 desativarbotoes();
-                for(String d : dropsdaonda) {
-                    if(d.contains("pocao") || d.contains("elixir") || d.contains("coracao")) player.addpocao(d);
-                    else if(d.contains("espada") || d.contains("arco") || d.contains("machado")) player.addarma(d);
-                    else player.addmagia(d);
-                }
-                dropsdaonda.clear();
+                SelecaoPersonagemController.salvardados();
             } else {
                 SelecaoPersonagemController.heroisderrotados[SelecaoPersonagemController.slotativo]++;
                 SelecaoPersonagemController.salvardados();
-                
                 indexinimigo++;
                 carregarproximoinimigo();
             }
@@ -214,24 +280,42 @@ public class GameController {
     private void turnoinimigos() {
         if (inimigoatual == null) return;
         int danoi = inimigoatual.getdano();
+        
+        boolean ignorardefesa = false;
         if (inimigoatual instanceof chefe) {
             chefe c = (chefe) inimigoatual;
             c.aplicaraumentodano();
             danoi = c.getdano();
             if (c.isamaldicoa()) maldicaolich = true;
+            if (c.getclasse().toLowerCase().contains("deusa") || c.getclasse().toLowerCase().contains("rei")) {
+                ignorardefesa = true;
+            }
         } else if (inimigoatual.getclasse().contains("mago") && Math.random() < 0.25) {
             danoi += (danoi * 0.2);
+        }
+
+        if (inimigoatual.getclasse().toLowerCase().contains("profecia")) {
+            if (turnosprofecia == 0) {
+                danoi = 200;
+                turnosprofecia = 1;
+            } else if (turnosprofecia == 1) {
+                danoi = 50;
+                turnosprofecia = 2;
+            } else {
+                danoi = 50;
+                turnosprofecia = 0;
+            }
         }
         
         if (danoreduzido > 0) { danoi -= (danoi * danoreduzido / 100); danoreduzido = 0; }
         
-        double multdef = Math.min(0.8, player.getdefesa() / 100.0);
+        double multdef = ignorardefesa ? 0.0 : Math.min(0.5, player.getdefesa() / 100.0);
         int danofinal = (int)(danoi * (1.0 - multdef));
         
         if(player.getarmaequipada().equals("espada de honra")) inimigoatual.receberdano((int)(danofinal * 0.25));
         
         vidaatualplayer -= Math.max(1, danofinal);
-        textlogbatalha.appendText("sofreu " + danofinal + ".\n");
+        textlogbatalha.appendText("sofreu " + danofinal + " de dano.\n");
         if (vidaatualplayer <= 0) {
             SelecaoPersonagemController.mortes[SelecaoPersonagemController.slotativo]++;
             SelecaoPersonagemController.niveis[SelecaoPersonagemController.slotativo] = player.getnivel();
@@ -241,16 +325,48 @@ public class GameController {
     }
 
     private void fimdeturno() {
+        turnosgerais++;
         if (turnostempestade > 0 && inimigoatual != null) {
             inimigoatual.receberdano(50);
             turnostempestade--;
             verificarmorteinimigo();
         }
         if (turnosbuffaprimoramento > 0) turnosbuffaprimoramento--;
+        if (turnosbonusfisico > 0) turnosbonusfisico--;
+        
         if (inimigoatual instanceof chefe) {
             chefe c = (chefe) inimigoatual;
             if (c.getcuraturno() > 0) c.curar(c.getcuraturno());
+            if (c.getclasse().toLowerCase().contains("deusa")) {
+                if (turnosgerais % 5 == 0) {
+                    c.curar(1000);
+                    textlogbatalha.appendText("deusa regenerou 1000 hp.\n");
+                }
+            }
         }
+        
+        if (SelecaoOndaController.ondaselecionada == 3) {
+            boolean temsanta = false;
+            for (heroi h : ondaatual.getinimigos()) {
+                if (h != null && h.getvida() > 0 && h.getclasse().toLowerCase().contains("santa")) {
+                    temsanta = true;
+                    break;
+                }
+            }
+            if (temsanta) {
+                for (heroi h : ondaatual.getinimigos()) {
+                    if (h != null && h.getvida() > 0) {
+                        h.receberdano(-40);
+                    }
+                }
+                textlogbatalha.appendText("santa curou 40 hp de todos aliados.\n");
+            }
+        }
+        
+        if (cdespecial > 0) cdespecial--;
+        if (cdhabilidade1 > 0) cdhabilidade1--;
+        if (cdhabilidade2 > 0) cdhabilidade2--;
+        
         atualizarinterface();
     }
 

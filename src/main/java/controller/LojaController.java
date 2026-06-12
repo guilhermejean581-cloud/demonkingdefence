@@ -21,32 +21,34 @@ public class LojaController {
     @FXML public void initialize() { atualizaryen(); }
 
     private void atualizaryen() {
-        if(labelyen != null) labelyen.setText("pontos: " + player.getpontosdemoniacos());
+        if(labelyen != null) labelyen.setText("ouro: " + player.getouro());
         if(labelaviso != null) labelaviso.setText("");
     }
 
     @FXML public void acaocomprarpocao(ActionEvent event) {
-        List<String> items = List.of("pocao de vida (50)", "pocao grande de vida (150)", "pocao de dano fisico (200)", "pocao de dano magico (200)");
+        List<String> items = List.of("pocao de vida (20)", "pocao grande de vida (40)", "pocao de dano fisico (50)", "pocao de dano magico (50)");
         ChoiceDialog<String> dialog = new ChoiceDialog<>(items.get(0), items);
         dialog.showAndWait().ifPresent(i -> {
             int custo = Integer.parseInt(i.replaceAll("[^0-9]", ""));
-            if(player.gastarpontos(custo)) {
+            if(player.gastarouro(custo)) {
                 player.addpocao(i.split(" \\(")[0]);
                 atualizaryen();
+                SelecaoPersonagemController.salvardados();
             }
         });
     }
 
     @FXML public void acaocomprarmagia(ActionEvent event) {
-        List<String> items = List.of("missil de mana (300)", "relampago (500)", "cura (800)", "tempestade de fogo (1000)", "meteoro (1500)");
+        List<String> items = List.of("missil de mana (100)", "relampago (150)", "cura (200)", "tempestade de fogo (250)", "meteoro (300)");
         ChoiceDialog<String> dialog = new ChoiceDialog<>(items.get(0), items);
         dialog.showAndWait().ifPresent(i -> {
             int custo = Integer.parseInt(i.replaceAll("[^0-9]", ""));
             String nome = i.split(" \\(")[0];
             if(player.getmagias().contains(nome)) return;
-            if(player.gastarpontos(custo)) {
+            if(player.gastarouro(custo)) {
                 player.addmagia(nome);
                 atualizaryen();
+                SelecaoPersonagemController.salvardados();
             }
         });
     }

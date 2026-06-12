@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,18 +75,13 @@ public class RankingController {
         String selecionado = listajogadores.getSelectionModel().getSelectedItem();
         if (selecionado != null && !selecionado.equals("nenhum personagem criado")) {
             String nomedeletar = selecionado.split(" - nv. ")[0];
-            for (int i = 0; i < 4; i++) {
-                if (SelecaoPersonagemController.nomes[i].equals(nomedeletar)) {
-                    SelecaoPersonagemController.nomes[i] = "";
-                    SelecaoPersonagemController.ondasliberadas[i] = 1;
-                    SelecaoPersonagemController.niveis[i] = 1;
-                    SelecaoPersonagemController.mortes[i] = 0;
-                    SelecaoPersonagemController.heroisderrotados[i] = 0;
-                    SelecaoPersonagemController.chefesderrotados[i] = 0;
-                    break;
-                }
-            }
-            SelecaoPersonagemController.salvardados();
+            try (Connection conn = model.ConexaoDB.conectar();
+                 PreparedStatement stmt = conn.prepareStatement("delete from save_personagem where nome = ?")) {
+                stmt.setString(1, nomedeletar);
+                stmt.executeUpdate();
+            } catch(Exception e) { }
+            
+            SelecaoPersonagemController.carregardados();
             atualizarlista();
         } else {
             Alert alerta = new Alert(Alert.AlertType.WARNING);

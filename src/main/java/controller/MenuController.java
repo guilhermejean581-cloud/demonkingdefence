@@ -41,12 +41,17 @@ public class MenuController {
 
     @FXML
     public void acaocreditos(ActionEvent event) {
-        System.out.println("desenvolvido por otavio e jean");
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/creditos.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) { }
     }
 
     @FXML
     public void acaoencerrar(ActionEvent event) {
-        System.out.println("encerrando o jogo");
         System.exit(0);
     }
 }
