@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import model.*;
 
 public class GameController {
-    @FXML private Label labelonda, labelvidaplayer, labelyen, labelnomeinimigo, labelvidainimigo, labelnomeplayer;
+    @FXML private Label labelonda, labelvidaplayer, labelnomeinimigo, labelvidainimigo, labelnomeplayer;
     @FXML private ProgressBar barrahpplayer, barrahpinimigo;
     @FXML private TextArea textlogbatalha;
     @FXML private Button btnproximaonda, btnirparaloja, btnataquefisico, btnataquemagico, btnfugir, btnhabilidade1, btnhabilidade2;
@@ -23,7 +23,6 @@ public class GameController {
     private onda ondaatual;
     private heroi inimigoatual;
     private int indexinimigo, vidaatualplayer, vidamaximainimigo;
-    private List<String> dropsdaonda = new ArrayList<>();
     private boolean bufffisico = false;
     private boolean buffmagico = false;
     private int turnosbuffaprimoramento = 0;
@@ -47,11 +46,6 @@ public class GameController {
         btnirparaloja.setVisible(false);
         textlogbatalha.setText("batalha iniciada.\n");
 
-        String nomepersonagem = SelecaoPersonagemController.nomes[SelecaoPersonagemController.slotativo];
-        if (labelnomeplayer != null) {
-            labelnomeplayer.setText(nomepersonagem);
-        }
-
         carregarproximoinimigo();
         atualizarinterface();
     }
@@ -67,12 +61,6 @@ public class GameController {
             btnproximaonda.setVisible(true);
             btnirparaloja.setVisible(true);
             desativarbotoes();
-            for(String d : dropsdaonda) {
-                if(d.contains("pocao") || d.contains("elixir") || d.contains("coracao")) player.addpocao(d);
-                else if(d.contains("espada") || d.contains("arco") || d.contains("machado")) player.addarma(d);
-                else player.addmagia(d);
-            }
-            dropsdaonda.clear();
             SelecaoPersonagemController.salvardados();
         }
         atualizarinterface();
@@ -82,11 +70,11 @@ public class GameController {
     
     @FXML public void acaoataquemagico(ActionEvent e) { 
         if (!player.temespecialdesbloqueado(player.getarmaequipada())) {
-            textlogbatalha.appendText("ataque especial bloqueado. use pontos demoniacos no inventario para desbloquear.\n");
+            textlogbatalha.appendText("ataque especial bloqueado.\n");
             return;
         }
         if (cdespecial > 0) {
-            textlogbatalha.appendText("ataque especial em recarga por " + cdespecial + " turnos.\n");
+            textlogbatalha.appendText("ataque especial em recarga.\n");
             return;
         }
         executarturno("ataque_especial"); 
@@ -96,7 +84,7 @@ public class GameController {
         String h = player.getsloth1();
         if(h.equals("vazio")) return;
         if (cdhabilidade1 > 0) {
-            textlogbatalha.appendText(h + " em recarga por " + cdhabilidade1 + " turnos.\n");
+            textlogbatalha.appendText("habilidade em recarga.\n");
             return;
         }
         executarturno(h); 
@@ -106,7 +94,7 @@ public class GameController {
         String h = player.getsloth2();
         if(h.equals("vazio")) return;
         if (cdhabilidade2 > 0) {
-            textlogbatalha.appendText(h + " em recarga por " + cdhabilidade2 + " turnos.\n");
+            textlogbatalha.appendText("habilidade em recarga.\n");
             return;
         }
         executarturno(h); 
@@ -144,13 +132,13 @@ public class GameController {
 
     private void processaracaoplayer(String acao) {
         String arma = player.getarmaequipada();
-        int basearma = 25;
+        int basearma = 20;
         if(arma.equals("machado de guerra")) basearma = 35;
-        else if(arma.equals("arco rapido")) basearma = 30;
-        else if(arma.equals("espada de honra")) basearma = 40;
+        else if(arma.equals("arco rapido")) basearma = 25;
+        else if(arma.equals("espada de honra")) basearma = 50;
         else if(arma.equals("espada nobre")) basearma = 60;
-        else if(arma.equals("arco magico")) basearma = 55;
-        else if(arma.equals("espada sagrada")) basearma = 80;
+        else if(arma.equals("arco magico")) basearma = 60;
+        else if(arma.equals("espada sagrada")) basearma = 100;
         else if(arma.equals("arco sagrado")) basearma = 75;
 
         double multf = 1.0 + (player.getatf() * 0.15);
@@ -206,25 +194,25 @@ public class GameController {
             else if(arma.equals("machado de guerra")) { 
                 dano = (int)(basearma * multf * 1.5); 
                 player.setdefesa(player.getdefesa() + 1);
-                textlogbatalha.appendText("machado de guerra aumentou passivamente sua defesa.\n");
+                textlogbatalha.appendText("defesa aumentada.\n");
             }
             else if(arma.equals("espada de honra")) { 
                 dano = (int)(basearma * multf); 
                 turnosbonusfisico = 2;
-                textlogbatalha.appendText("espada de honra ativou bonus fisico por 2 rounds.\n");
+                textlogbatalha.appendText("bonus fisico.\n");
             }
             else if(arma.equals("espada nobre")) { 
                 dano = (int)(basearma * multf); 
                 if(inimigoatual.getvida() < vidamaximainimigo * 0.3) dano *= 2; 
                 int h = (int)(dano * 0.3);
                 curarplayer(h);
-                textlogbatalha.appendText("espada nobre regenerou " + h + " hp.\n");
+                textlogbatalha.appendText("regenerou hp.\n");
             }
             else if(arma.equals("espada sagrada")) { 
                 dano = (int)(basearma * multf); 
                 int h = (int)(dano * 0.5);
                 curarplayer(h);
-                textlogbatalha.appendText("espada sagrada regenerou " + h + " hp.\n");
+                textlogbatalha.appendText("regenerou hp.\n");
             }
             else if(arma.equals("arco sagrado")) { dano = (int)(basearma * multf * 2); }
         } else if(acao.equals("bola de fogo")) { dano = (int)(25 * multm); magico = true; }
@@ -261,9 +249,24 @@ public class GameController {
             textlogbatalha.appendText("derrotado.\n");
             player.addpontos(inimigoatual.getpontos());
             
+            double rolagemdrop = Math.random() * 100;
+            if (rolagemdrop <= inimigoatual.getchancedrop()) {
+                String drop = inimigoatual.getdrop();
+                if (drop != null && !drop.equals("nada") && !drop.isEmpty()) {
+                    if (drop.contains("pocao") || drop.contains("elixir") || drop.contains("coracao")) {
+                        player.addpocao(drop);
+                    } else if (drop.contains("espada") || drop.contains("arco") || drop.contains("machado")) {
+                        player.addarma(drop);
+                    } else {
+                        player.addmagia(drop);
+                    }
+                    textlogbatalha.appendText("dropou: " + drop + "\n");
+                }
+            }
+            
             if (inimigoatual instanceof chefe) {
                 player.addouro(100);
-                textlogbatalha.appendText("chefe derrotado. ganhou 100 de ouro.\n");
+                textlogbatalha.appendText("chefe derrotado.\n");
                 SelecaoPersonagemController.chefesderrotados[SelecaoPersonagemController.slotativo]++;
                 if (SelecaoOndaController.ondaselecionada >= SelecaoPersonagemController.ondasliberadas[SelecaoPersonagemController.slotativo]) {
                     SelecaoPersonagemController.ondasliberadas[SelecaoPersonagemController.slotativo] = SelecaoOndaController.ondaselecionada + 1;
@@ -365,7 +368,7 @@ public class GameController {
                         h.receberdano(-40);
                     }
                 }
-                textlogbatalha.appendText("santa curou 40 hp de todos aliados.\n");
+                textlogbatalha.appendText("santa curou.\n");
             }
         }
         
@@ -378,9 +381,11 @@ public class GameController {
 
     private void atualizarinterface() {
         labelonda.setText("onda " + SelecaoOndaController.ondaselecionada);
-        labelyen.setText("pontos " + player.getpontosdemoniacos());
         labelvidaplayer.setText("hp " + Math.max(0, vidaatualplayer) + "/" + player.getvidamaxima());
         
+        String nomepersonagem = SelecaoPersonagemController.nomes[SelecaoPersonagemController.slotativo];
+        labelnomeplayer.setText(nomepersonagem + " lv. " + player.getnivel());
+
         btnataquefisico.setText("atacar");
         btnataquemagico.setText("especial");
         btnhabilidade1.setText(player.getsloth1());
@@ -389,7 +394,7 @@ public class GameController {
         
         barrahpplayer.setProgress((double) Math.max(0, vidaatualplayer) / player.getvidamaxima());
         if (inimigoatual != null) {
-            labelnomeinimigo.setText(inimigoatual.getclasse());
+            labelnomeinimigo.setText(inimigoatual.getclasse() + " lv. " + inimigoatual.getlevel());
             labelvidainimigo.setText(Math.max(0, inimigoatual.getvida()) + "/" + vidamaximainimigo);
             barrahpinimigo.setProgress((double) Math.max(0, inimigoatual.getvida()) / vidamaximainimigo);
         }

@@ -17,7 +17,6 @@
                   <VBox prefWidth="300.0" spacing="5.0">
                      <children>
                         <Label fx:id="labelnomeplayer" style="-fx-font-size: 18px;" text="rei demonio" />
-                        <Label fx:id="labelyen" text="yen: 0" style="-fx-text-fill: green; -fx-font-weight: bold;" />
                         <Label fx:id="labelvidaplayer" text="hp: 100/100" />
                         <ProgressBar fx:id="barrahpplayer" prefWidth="300.0" progress="1.0" style="-fx-accent: red;" />
                      </children>

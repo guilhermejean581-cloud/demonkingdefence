@@ -9,13 +9,10 @@
       <VBox alignment="CENTER" layoutX="200.0" layoutY="50.0" prefHeight="500.0" prefWidth="400.0" spacing="15.0">
          <children>
             <Label style="-fx-font-size: 30px;" text="loja do submundo" />
-            <Label fx:id="labelyen" style="-fx-font-size: 18px; -fx-text-fill: green;" text="dinheiro: 0 yen" />
+            <Label fx:id="labelyen" style="-fx-font-size: 18px; -fx-text-fill: green;" text="ouro: 0" />
             <Label fx:id="labelaviso" style="-fx-text-fill: red;" text="" />
-            <Button mnemonicParsing="false" onAction="#acaocomprarpocao" prefHeight="40.0" prefWidth="280.0" text="pocao (50 yen)" />
-            <Button mnemonicParsing="false" onAction="#acaocomprarmagia" prefHeight="40.0" prefWidth="280.0" text="magia: bola de fogo (150 yen)" />
-            <Button mnemonicParsing="false" onAction="#acaocomprargreatsword" prefHeight="40.0" prefWidth="280.0" text="arma: great sword (300 yen)" />
-            <Button mnemonicParsing="false" onAction="#acaocomprarhab1" prefHeight="40.0" prefWidth="280.0" text="hab 1: corte sombrio (400 yen)" />
-            <Button mnemonicParsing="false" onAction="#acaocomprarhab2" prefHeight="40.0" prefWidth="280.0" text="hab 2: explosao infernal (500 yen)" />
+            <Button mnemonicParsing="false" onAction="#acaocomprarpocao" prefHeight="40.0" prefWidth="280.0" text="pocoes" />
+            <Button mnemonicParsing="false" onAction="#acaocomprarmagia" prefHeight="40.0" prefWidth="280.0" text="magias" />
             <Button mnemonicParsing="false" onAction="#acaovoltarondas" prefHeight="40.0" prefWidth="280.0" text="voltar para ondas" />
          </children>
       </VBox>

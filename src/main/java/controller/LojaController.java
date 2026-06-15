@@ -26,36 +26,43 @@ public class LojaController {
     }
 
     @FXML public void acaocomprarpocao(ActionEvent event) {
-        List<String> items = List.of("pocao de vida (20)", "pocao grande de vida (40)", "pocao de dano fisico (50)", "pocao de dano magico (50)");
+        List<String> items = List.of("pocao de vida (25)", "pocao grande de vida (50)", "pocao de dano fisico (80)", "pocao de dano magico (80)");
         ChoiceDialog<String> dialog = new ChoiceDialog<>(items.get(0), items);
+        dialog.setTitle("comprar pocao");
+        dialog.setHeaderText("escolha a pocao que deseja comprar");
         dialog.showAndWait().ifPresent(i -> {
             int custo = Integer.parseInt(i.replaceAll("[^0-9]", ""));
             if(player.gastarouro(custo)) {
                 player.addpocao(i.split(" \\(")[0]);
                 atualizaryen();
                 SelecaoPersonagemController.salvardados();
+            } else {
+                labelaviso.setText("ouro insuficiente.");
             }
         });
     }
 
     @FXML public void acaocomprarmagia(ActionEvent event) {
-        List<String> items = List.of("missil de mana (100)", "relampago (150)", "cura (200)", "tempestade de fogo (250)", "meteoro (300)");
+        List<String> items = List.of("missil de mana (100)", "relampago (200)", "cura (200)", "tempestade de fogo (300)", "meteoro (400)");
         ChoiceDialog<String> dialog = new ChoiceDialog<>(items.get(0), items);
+        dialog.setTitle("comprar magia");
+        dialog.setHeaderText("escolha a magia que deseja comprar");
         dialog.showAndWait().ifPresent(i -> {
             int custo = Integer.parseInt(i.replaceAll("[^0-9]", ""));
             String nome = i.split(" \\(")[0];
-            if(player.getmagias().contains(nome)) return;
+            if(player.getmagias().contains(nome)) {
+                labelaviso.setText("voce ja possui esta magia.");
+                return;
+            }
             if(player.gastarouro(custo)) {
                 player.addmagia(nome);
                 atualizaryen();
                 SelecaoPersonagemController.salvardados();
+            } else {
+                labelaviso.setText("ouro insuficiente.");
             }
         });
     }
-
-    @FXML public void acaocomprargreatsword(ActionEvent event) { }
-    @FXML public void acaocomprarhab1(ActionEvent event) { }
-    @FXML public void acaocomprarhab2(ActionEvent event) { }
 
     @FXML public void acaovoltarondas(ActionEvent event) {
         try {
