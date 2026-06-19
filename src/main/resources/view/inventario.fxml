@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InventarioController">
+   <children>
+      <ImageView fitWidth="800.0" fitHeight="800.0" layoutY="-100.0" pickOnBounds="true">
+         <image>
+            <Image url="@../imagens/background_inventario.png" />
+         </image>
+      </ImageView>
+
+      <Button layoutX="145.0" layoutY="17.33" mnemonicParsing="false" onAction="#acaovoltar" prefHeight="60.0" prefWidth="90.0" styleClass="btn-invisivel" />
+
+      <Label fx:id="labelnivelxp" layoutX="0.0" layoutY="93.33" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="nivel: 1" />
+      <Label fx:id="labelyen" layoutX="0.0" layoutY="120.0" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="pontos demoniacos: 0 | disponiveis: 0" />
+
+      <Label fx:id="labelhp" layoutX="240.0" layoutY="188.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="50" />
+      <Label fx:id="labelatf" layoutX="240.0" layoutY="236.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="1" />
+      <Label fx:id="labelatm" layoutX="240.0" layoutY="284.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="1" />
+      <Label fx:id="labeldefesa" layoutX="240.0" layoutY="332.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="1%" />
+
+      <Button layoutX="462.0" layoutY="180.0" mnemonicParsing="false" onAction="#acaomaishp" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
+      <Button layoutX="462.0" layoutY="228.0" mnemonicParsing="false" onAction="#acaomaisatf" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
+      <Button layoutX="462.0" layoutY="276.0" mnemonicParsing="false" onAction="#acaomaisatm" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
+      <Button layoutX="462.0" layoutY="324.0" mnemonicParsing="false" onAction="#acaomaisdefesa" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
+
+      <Button layoutX="270.0" layoutY="380.0" mnemonicParsing="false" onAction="#acaosubirnivel" prefHeight="34.67" prefWidth="260.0" styleClass="btn-invisivel" />
+
+      <Label fx:id="labelslot1" layoutX="0.0" layoutY="473.33" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="vazio" />
+      <Label fx:id="labelslot2" layoutX="0.0" layoutY="500.0" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="vazio | vazio" />
+
+      <Button layoutX="200.0" layoutY="535.0" mnemonicParsing="false" onAction="#acaoequipararma" prefHeight="33.33" prefWidth="125.0" styleClass="btn-invisivel" />
+      <Button layoutX="337.0" layoutY="535.0" mnemonicParsing="false" onAction="#acaoequiparmagia1" prefHeight="33.33" prefWidth="125.0" styleClass="btn-invisivel" />
+      <Button layoutX="475.0" layoutY="535.0" mnemonicParsing="false" onAction="#acaoequiparmagia2" prefHeight="33.33" prefWidth="125.0" styleClass="btn-invisivel" />
+
+      <Button layoutX="250.0" layoutY="565.0" mnemonicParsing="false" onAction="#acaodesbloquearespecial" prefHeight="33.33" prefWidth="300.0" styleClass="btn-invisivel" />
+   </children>
+</AnchorPane>
