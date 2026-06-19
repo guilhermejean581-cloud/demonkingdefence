@@ -4,39 +4,83 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InventarioController">
    <children>
-      <ImageView fitWidth="800.0" fitHeight="800.0" layoutY="-100.0" pickOnBounds="true">
+      <ImageView fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="false">
          <image>
             <Image url="@../imagens/background_inventario.png" />
          </image>
       </ImageView>
 
-      <Button layoutX="145.0" layoutY="17.33" mnemonicParsing="false" onAction="#acaovoltar" prefHeight="60.0" prefWidth="90.0" styleClass="btn-invisivel" />
+      <AnchorPane layoutX="50.0" layoutY="40.0" prefHeight="520.0" prefWidth="700.0" style="-fx-background-color: rgba(15, 15, 20, 0.9); -fx-background-radius: 15; -fx-border-color: #a98b4b; -fx-border-width: 2; -fx-border-radius: 13;">
+         <children>
+            
+            <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#acaovoltar" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: transparent; -fx-border-color: #a98b4b; -fx-border-radius: 5; -fx-text-fill: #a98b4b; -fx-font-weight: bold; -fx-cursor: hand;" text="&lt; Voltar" />
+            
+            <Label fx:id="labelnivelxp" alignment="CENTER" layoutX="150.0" layoutY="20.0" prefWidth="400.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 18px;" text="Nível: 1 | XP: 0/100" />
+            <Label fx:id="labelyen" alignment="CENTER" layoutX="150.0" layoutY="50.0" prefWidth="400.0" style="-fx-text-fill: #FFD700; -fx-font-weight: bold; -fx-font-size: 14px;" text="Pontos Demoníacos: 0 | Disponíveis: 0" />
 
-      <Label fx:id="labelnivelxp" layoutX="0.0" layoutY="93.33" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="nivel: 1" />
-      <Label fx:id="labelyen" layoutX="0.0" layoutY="120.0" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="pontos demoniacos: 0 | disponiveis: 0" />
+            <Line endX="660.0" layoutX="20.0" layoutY="90.0" opacity="0.5" stroke="#a98b4b" strokeWidth="1.5" />
 
-      <Label fx:id="labelhp" layoutX="240.0" layoutY="188.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="50" />
-      <Label fx:id="labelatf" layoutX="240.0" layoutY="236.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="1" />
-      <Label fx:id="labelatm" layoutX="240.0" layoutY="284.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="1" />
-      <Label fx:id="labeldefesa" layoutX="240.0" layoutY="332.0" prefWidth="200.0" alignment="CENTER_RIGHT" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;" text="1%" />
 
-      <Button layoutX="462.0" layoutY="180.0" mnemonicParsing="false" onAction="#acaomaishp" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
-      <Button layoutX="462.0" layoutY="228.0" mnemonicParsing="false" onAction="#acaomaisatf" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
-      <Button layoutX="462.0" layoutY="276.0" mnemonicParsing="false" onAction="#acaomaisatm" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
-      <Button layoutX="462.0" layoutY="324.0" mnemonicParsing="false" onAction="#acaomaisdefesa" prefHeight="34.67" prefWidth="26.0" styleClass="btn-invisivel" />
+            <Label layoutX="40.0" layoutY="110.0" style="-fx-text-fill: #a98b4b; -fx-font-weight: bold; -fx-font-size: 16px;" text="Atributos" />
 
-      <Button layoutX="270.0" layoutY="380.0" mnemonicParsing="false" onAction="#acaosubirnivel" prefHeight="34.67" prefWidth="260.0" styleClass="btn-invisivel" />
+            <AnchorPane layoutX="40.0" layoutY="150.0" prefHeight="40.0" prefWidth="280.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 5; -fx-border-color: #444; -fx-border-radius: 5;">
+               <children>
+                  <Label fx:id="labelhp" layoutX="10.0" layoutY="10.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="HP: 50" />
+                  <Button layoutX="240.0" layoutY="5.0" mnemonicParsing="false" onAction="#acaomaishp" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #a98b4b; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand;" text="+" />
+               </children>
+            </AnchorPane>
 
-      <Label fx:id="labelslot1" layoutX="0.0" layoutY="473.33" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="vazio" />
-      <Label fx:id="labelslot2" layoutX="0.0" layoutY="500.0" prefWidth="800.0" alignment="CENTER" style="-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;" text="vazio | vazio" />
+            <AnchorPane layoutX="40.0" layoutY="200.0" prefHeight="40.0" prefWidth="280.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 5; -fx-border-color: #444; -fx-border-radius: 5;">
+               <children>
+                  <Label fx:id="labelatf" layoutX="10.0" layoutY="10.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Ataque Físico: 1" />
+                  <Button layoutX="240.0" layoutY="5.0" mnemonicParsing="false" onAction="#acaomaisatf" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #a98b4b; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand;" text="+" />
+               </children>
+            </AnchorPane>
 
-      <Button layoutX="200.0" layoutY="535.0" mnemonicParsing="false" onAction="#acaoequipararma" prefHeight="33.33" prefWidth="125.0" styleClass="btn-invisivel" />
-      <Button layoutX="337.0" layoutY="535.0" mnemonicParsing="false" onAction="#acaoequiparmagia1" prefHeight="33.33" prefWidth="125.0" styleClass="btn-invisivel" />
-      <Button layoutX="475.0" layoutY="535.0" mnemonicParsing="false" onAction="#acaoequiparmagia2" prefHeight="33.33" prefWidth="125.0" styleClass="btn-invisivel" />
+            <AnchorPane layoutX="40.0" layoutY="250.0" prefHeight="40.0" prefWidth="280.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 5; -fx-border-color: #444; -fx-border-radius: 5;">
+               <children>
+                  <Label fx:id="labelatm" layoutX="10.0" layoutY="10.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Ataque Mágico: 1" />
+                  <Button layoutX="240.0" layoutY="5.0" mnemonicParsing="false" onAction="#acaomaisatm" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #a98b4b; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand;" text="+" />
+               </children>
+            </AnchorPane>
 
-      <Button layoutX="250.0" layoutY="565.0" mnemonicParsing="false" onAction="#acaodesbloquearespecial" prefHeight="33.33" prefWidth="300.0" styleClass="btn-invisivel" />
+            <AnchorPane layoutX="40.0" layoutY="300.0" prefHeight="40.0" prefWidth="280.0" style="-fx-background-color: rgba(255, 255, 255, 0.05); -fx-background-radius: 5; -fx-border-color: #444; -fx-border-radius: 5;">
+               <children>
+                  <Label fx:id="labeldefesa" layoutX="10.0" layoutY="10.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Defesa: 1%" />
+                  <Button layoutX="240.0" layoutY="5.0" mnemonicParsing="false" onAction="#acaomaisdefesa" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #a98b4b; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand;" text="+" />
+               </children>
+            </AnchorPane>
+
+            <Button layoutX="40.0" layoutY="390.0" mnemonicParsing="false" onAction="#acaosubirnivel" prefHeight="45.0" prefWidth="280.0" style="-fx-background-color: linear-gradient(to bottom, #4CAF50, #2E7D32); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 8; -fx-cursor: hand;" text="Subir de Nível" />
+
+
+            <Line endY="380.0" layoutX="350.0" layoutY="110.0" opacity="0.3" stroke="#a98b4b" strokeWidth="1.5" />
+
+
+            <Label layoutX="380.0" layoutY="110.0" style="-fx-text-fill: #a98b4b; -fx-font-weight: bold; -fx-font-size: 16px;" text="Equipamentos" />
+
+            <AnchorPane layoutX="380.0" layoutY="150.0" prefHeight="80.0" prefWidth="280.0" style="-fx-background-color: rgba(0, 0, 0, 0.5); -fx-background-radius: 8; -fx-border-color: #555; -fx-border-radius: 8;">
+               <children>
+                  <Label fx:id="labelslot1" alignment="CENTER" layoutX="10.0" layoutY="15.0" prefWidth="260.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Arma: Vazio" />
+                  <Button layoutX="65.0" layoutY="45.0" mnemonicParsing="false" onAction="#acaoequipararma" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #333; -fx-text-fill: white; -fx-border-color: #777; -fx-border-radius: 3; -fx-cursor: hand;" text="Equipar Arma" />
+               </children>
+            </AnchorPane>
+
+            <AnchorPane layoutX="380.0" layoutY="260.0" prefHeight="80.0" prefWidth="280.0" style="-fx-background-color: rgba(0, 0, 0, 0.5); -fx-background-radius: 8; -fx-border-color: #555; -fx-border-radius: 8;">
+               <children>
+                  <Label fx:id="labelslot2" alignment="CENTER" layoutX="10.0" layoutY="15.0" prefWidth="260.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Magias: Vazio | Vazio" />
+                  <Button layoutX="10.0" layoutY="45.0" mnemonicParsing="false" onAction="#acaoequiparmagia1" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: #333; -fx-text-fill: white; -fx-border-color: #777; -fx-border-radius: 3; -fx-cursor: hand;" text="Equipar Magia 1" />
+                  <Button layoutX="145.0" layoutY="45.0" mnemonicParsing="false" onAction="#acaoequiparmagia2" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: #333; -fx-text-fill: white; -fx-border-color: #777; -fx-border-radius: 3; -fx-cursor: hand;" text="Equipar Magia 2" />
+               </children>
+            </AnchorPane>
+
+            <Button layoutX="380.0" layoutY="390.0" mnemonicParsing="false" onAction="#acaodesbloquearespecial" prefHeight="45.0" prefWidth="280.0" style="-fx-background-color: linear-gradient(to bottom, #8E24AA, #4A148C); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-cursor: hand;" text="Desbloquear Habilidade Especial" />
+
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
