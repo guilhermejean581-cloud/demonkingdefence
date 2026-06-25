@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.Optional;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,8 +10,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.player;
 
@@ -27,7 +30,48 @@ public class InventarioController {
     
     private player p = model.player.getinstancia();
 
-    @FXML public void initialize() { atualizarinterface(); }
+    @FXML public void initialize() { 
+        atualizarinterface(); 
+        
+        // TRUQUE: Procura os botões na interface e torna-os funcionais, 
+        // mas 100% invisíveis (transparentes) para que pareça que o jogador está a clicar na imagem de fundo.
+        Platform.runLater(() -> {
+            if (labelslot1 != null && labelslot1.getParent() instanceof AnchorPane) {
+                AnchorPane parent = (AnchorPane) labelslot1.getParent();
+                for (Node node : parent.getChildren()) {
+                    if (node instanceof Button) {
+                        Button btn = (Button) node;
+                        String textoBtn = btn.getText();
+                        if (textoBtn != null) {
+                            
+                            // Transforma o botão de "-" em "+" caso exista no FXML
+                            if (textoBtn.equals("-")) {
+                                btn.setText("+");
+                                textoBtn = "+";
+                            }
+                            
+                            // Torna os botões específicos e os 4 botões de mais status transparentes
+                            if (textoBtn.equals("equipar arma") || 
+                                textoBtn.equals("equipar magia 2") || 
+                                textoBtn.equals("equipar magia") ||
+                                textoBtn.startsWith("desbloquear especial") ||
+                                textoBtn.equals("+")) {
+                                
+                                btn.setVisible(true); // Garante que fiquem ativos para receber cliques
+                                // Remove a cor de fundo, a borda do FXML e o caractere escrito
+                                btn.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;");
+                            }
+                            
+                            // Mantém o texto dinâmico do botão de subir nível visível para o jogador ver o custo
+                            if (textoBtn.startsWith("subir nivel")) {
+                                btn.setText("subir nivel (custo: " + (p.getnivel() * 100) + " pontos)");
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 
     @FXML public void acaosubirnivel(ActionEvent e) {
         int custonivel = p.getnivel() * 100;
@@ -35,9 +79,16 @@ public class InventarioController {
             p.gastarpontos(custonivel);
             p.setnivel(p.getnivel() + 1);
             p.setpontosdistribuir(p.getpontosdistribuir() + 4);
+            
             SelecaoPersonagemController.niveis[SelecaoPersonagemController.slotativo] = p.getnivel();
             SelecaoPersonagemController.salvardados();
             atualizarinterface();
+            
+            // Atualiza o texto do botão clicado para refletir o novo custo
+            if (e.getSource() instanceof Button) {
+                Button btn = (Button) e.getSource();
+                btn.setText("subir nivel (custo: " + (p.getnivel() * 100) + " pontos)");
+            }
             
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("sucesso");
@@ -193,14 +244,14 @@ public class InventarioController {
     }
 
     private void atualizarinterface() {
-        labelslot1.setText(p.getarmaequipada());
-        labelslot2.setText(p.getsloth1() + " | " + p.getsloth2());
-        labelyen.setText(p.getpontosdemoniacos() + " | " + p.getpontosdistribuir());
-        labelnivelxp.setText(String.valueOf(p.getnivel()));
-        labelhp.setText(String.valueOf(p.getvidamaxima()));
-        labelatf.setText(String.valueOf(p.getatf()));
-        labelatm.setText(String.valueOf(p.getatm()));
-        labeldefesa.setText(p.getdefesa() + "%");
+        labelslot1.setText("arma: " + p.getarmaequipada());
+        labelslot2.setText("m1: " + p.getsloth1() + " | m2: " + p.getsloth2());
+        labelyen.setText("pontos demoniacos: " + p.getpontosdemoniacos() + " | pontos para distribuir: " + p.getpontosdistribuir());
+        labelnivelxp.setText("nivel: " + p.getnivel());
+        labelhp.setText("hp: " + p.getvidamaxima());
+        labelatf.setText("atf: " + p.getatf());
+        labelatm.setText("atm: " + p.getatm());
+        labeldefesa.setText("defesa: " + p.getdefesa() + "%");
     }
 
     @FXML public void acaovoltar(ActionEvent e) {
