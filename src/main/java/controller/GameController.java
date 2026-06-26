@@ -17,7 +17,7 @@ public class GameController {
     @FXML private Label labelonda, labelvidaplayer, labelnomeinimigo, labelvidainimigo, labelnomeplayer;
     @FXML private ProgressBar barrahpplayer, barrahpinimigo;
     @FXML private TextArea textlogbatalha;
-    @FXML private Button btnproximaonda, btnirparaloja, btnataquefisico, btnataquemagico, btnfugir, btnhabilidade1, btnhabilidade2;
+    @FXML private Button btnproximaonda, btnirparaloja, btnataquefisico, btnataquemagico, btnfugir, btnhabilidade1, btnhabilidade2, btnfugirvitoria;
     @FXML private VBox painelvitoria, listadrops;
 
     private player player = model.player.getinstancia();
@@ -289,6 +289,18 @@ public class GameController {
                     SelecaoPersonagemController.ondasliberadas[SelecaoPersonagemController.slotativo] = SelecaoOndaController.ondaselecionada + 1;
                 }
                 SelecaoPersonagemController.niveis[SelecaoPersonagemController.slotativo] = player.getnivel();
+                
+                // Se for boss, esconde o botão de fugir no painel de vitória
+                if(btnfugirvitoria != null) {
+                    btnfugirvitoria.setVisible(false);
+                    btnfugirvitoria.setManaged(false);
+                }
+            } else {
+                // Se não for boss, mostra o botão de fugir
+                if(btnfugirvitoria != null) {
+                    btnfugirvitoria.setVisible(true);
+                    btnfugirvitoria.setManaged(true);
+                }
             }
             
             if(!tevedrop) {
@@ -411,7 +423,8 @@ public class GameController {
         
         barrahpplayer.setProgress((double) Math.max(0, vidaatualplayer) / player.getvidamaxima());
         if (inimigoatual != null) {
-            labelnomeinimigo.setText(inimigoatual.getclasse() + " lv. " + inimigoatual.getlevel());
+            String levelTexto = (inimigoatual instanceof chefe) ? "???" : String.valueOf(inimigoatual.getlevel());
+            labelnomeinimigo.setText(inimigoatual.getclasse() + " lv. " + levelTexto);
             labelvidainimigo.setText(Math.max(0, inimigoatual.getvida()) + "/" + vidamaximainimigo);
             barrahpinimigo.setProgress((double) Math.max(0, inimigoatual.getvida()) / vidamaximainimigo);
         }
@@ -465,7 +478,7 @@ public class GameController {
             desativarbotoes();
             SelecaoPersonagemController.salvardados();
         } else {
-            textlogbatalha.clear(); // Limpa o log de batalha para reiniciar a cada inimigo 
+            textlogbatalha.clear(); 
             SelecaoPersonagemController.heroisderrotados[SelecaoPersonagemController.slotativo]++;
             SelecaoPersonagemController.salvardados();
             indexinimigo++;

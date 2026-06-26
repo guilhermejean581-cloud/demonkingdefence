@@ -1,7 +1,8 @@
 package controller;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,7 +37,11 @@ public class InventarioController {
         Platform.runLater(() -> {
             if (labelslot1 != null && labelslot1.getParent() instanceof AnchorPane) {
                 AnchorPane parent = (AnchorPane) labelslot1.getParent();
-                for (Node node : parent.getChildren()) {
+                
+                // CRÍTICO: Criamos uma cópia da lista para evitar ConcurrentModificationException
+                List<Node> listaFilhos = new ArrayList<>(parent.getChildren());
+                
+                for (Node node : listaFilhos) {
                     if (node instanceof Button) {
                         Button btn = (Button) node;
                         String textobtn = btn.getText();
