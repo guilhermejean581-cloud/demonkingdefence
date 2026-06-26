@@ -33,37 +33,30 @@ public class InventarioController {
     @FXML public void initialize() { 
         atualizarinterface(); 
         
-        // TRUQUE: Procura os botões na interface e torna-os funcionais, 
-        // mas 100% invisíveis (transparentes) para que pareça que o jogador está a clicar na imagem de fundo.
         Platform.runLater(() -> {
             if (labelslot1 != null && labelslot1.getParent() instanceof AnchorPane) {
                 AnchorPane parent = (AnchorPane) labelslot1.getParent();
                 for (Node node : parent.getChildren()) {
                     if (node instanceof Button) {
                         Button btn = (Button) node;
-                        String textoBtn = btn.getText();
-                        if (textoBtn != null) {
+                        String textobtn = btn.getText();
+                        if (textobtn != null) {
                             
-                            // Transforma o botão de "-" em "+" caso exista no FXML
-                            if (textoBtn.equals("-")) {
-                                btn.setText("+");
-                                textoBtn = "+";
-                            }
+                            // Remove todos os espacos vazios para garantir que encontre os botoes
+                            String txt = textobtn.replaceAll("\\s+", "").toLowerCase();
                             
-                            // Torna os botões específicos e os 4 botões de mais status transparentes
-                            if (textoBtn.equals("equipar arma") || 
-                                textoBtn.equals("equipar magia 2") || 
-                                textoBtn.equals("equipar magia") ||
-                                textoBtn.startsWith("desbloquear especial") ||
-                                textoBtn.equals("+")) {
+                            if (txt.equals("+") || 
+                                txt.equals("-") || 
+                                txt.contains("equipar") || 
+                                txt.contains("desbloquear")) {
                                 
-                                btn.setVisible(true); // Garante que fiquem ativos para receber cliques
-                                // Remove a cor de fundo, a borda do FXML e o caractere escrito
-                                btn.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;");
+                                btn.setVisible(true);
+                                btn.setText(""); 
+                                btn.setStyle("-fx-background-color: rgba(0,0,0,0.02); -fx-border-color: transparent; -fx-cursor: hand;");
+                                btn.setOpacity(0.0); 
+                                btn.toFront();
                             }
-                            
-                            // Mantém o texto dinâmico do botão de subir nível visível para o jogador ver o custo
-                            if (textoBtn.startsWith("subir nivel")) {
+                            else if (txt.contains("subirnivel")) {
                                 btn.setText("subir nivel (custo: " + (p.getnivel() * 100) + " pontos)");
                             }
                         }
@@ -84,7 +77,6 @@ public class InventarioController {
             SelecaoPersonagemController.salvardados();
             atualizarinterface();
             
-            // Atualiza o texto do botão clicado para refletir o novo custo
             if (e.getSource() instanceof Button) {
                 Button btn = (Button) e.getSource();
                 btn.setText("subir nivel (custo: " + (p.getnivel() * 100) + " pontos)");

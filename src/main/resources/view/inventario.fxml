@@ -30,12 +30,12 @@
       
                   <Label fx:id="labelslot1" layoutX="345.0" layoutY="352.0" style="-fx-text-fill: #bfa780; -fx-font-size: 14px;" text="arma: espada antiga" />
       <Label fx:id="labelslot2" layoutX="320.0" layoutY="381.0" style="-fx-text-fill: #bfa780; -fx-font-size: 14px;" text="m1: bola de fogo | m2: vazio" />
-      <Button layoutX="453.0" layoutY="193.0" mnemonicParsing="false" onAction="#acaomaisdefesa" prefHeight="10.0" prefWidth="34.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 3; -fx-text-fill: #bfa780; -fx-font-weight: bold; -fx-cursor: hand;" text="+ hp" />
+      <Button layoutX="453.0" layoutY="193.0" mnemonicParsing="false" onAction="#acaomaisdefesa" prefHeight="10.0" prefWidth="34.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 3; -fx-text-fill: #bfa780; -fx-font-weight: bold; -fx-cursor: hand;" text="+ hp" visible="false" />
       <Button layoutX="203.0" layoutY="410.0" mnemonicParsing="false" onAction="#acaoequipararma" prefHeight="30.0" prefWidth="113.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 5; -fx-text-fill: #bfa780; -fx-cursor: hand;" text="equipar arma" visible="false" />
       
             <Button layoutX="250.0" layoutY="438.0" mnemonicParsing="false" onAction="#acaodesbloquearespecial" prefHeight="20.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 5; -fx-text-fill: #bfa780; -fx-cursor: hand;" text="desbloquear especial (custo: 200 pontos)" visible="false" />
       <Button layoutX="466.0" layoutY="410.0" mnemonicParsing="false" onAction="#acaoequiparmagia2" prefHeight="30.0" prefWidth="133.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 5; -fx-text-fill: #bfa780; -fx-cursor: hand;" text="equipar magia 2" visible="false" />
-      <Button layoutX="456.0" layoutY="267.0" mnemonicParsing="false" onAction="#acaomaishp" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 3; -fx-text-fill: #bfa780; -fx-font-weight: bold; -fx-cursor: hand;" text="+ defesa" />
+      <Button layoutX="456.0" layoutY="267.0" mnemonicParsing="false" onAction="#acaomaishp" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 3; -fx-text-fill: #bfa780; -fx-font-weight: bold; -fx-cursor: hand;" text="+ defesa" visible="false" />
       <Button layoutX="330.0" layoutY="411.0" mnemonicParsing="false" onAction="#acaoequiparmagia1" prefHeight="10.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-border-color: #554433; -fx-border-radius: 5; -fx-text-fill: #bfa780; -fx-cursor: hand;" text="equipar magia" textFill="WHITE" visible="false" />
    </children>
 </AnchorPane>
