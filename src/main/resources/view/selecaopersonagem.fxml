@@ -16,18 +16,18 @@
       <Button layoutX="60.0" layoutY="110.0" mnemonicParsing="false" onAction="#acaovoltar" prefHeight="60.0" prefWidth="86.67" styleClass="btn-invisivel" />
       
       <Button fx:id="btnslot1" layoutX="201.0" layoutY="150.0" mnemonicParsing="false" onAction="#acaoslot1" prefHeight="50.0" prefWidth="345.0" styleClass="btn-slot" text="criar personagem" />
-      <Button fx:id="btndeletar1" layoutX="746.67" layoutY="150.0" mnemonicParsing="false" onAction="#acaodeletar1" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
+      <Button fx:id="btndeletar1" layoutX="544.0" layoutY="150.0" mnemonicParsing="false" onAction="#acaodeletar1" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
 
       <Button fx:id="btnslot2" layoutX="208.0" layoutY="225.0" mnemonicParsing="false" onAction="#acaoslot2" prefHeight="50.0" prefWidth="336.0" styleClass="btn-slot" text="criar personagem" />
-      <Button fx:id="btndeletar2" layoutX="746.67" layoutY="225.0" mnemonicParsing="false" onAction="#acaodeletar2" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
+      <Button fx:id="btndeletar2" layoutX="544.0" layoutY="225.0" mnemonicParsing="false" onAction="#acaodeletar2" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
 
       <Button fx:id="btnslot3" layoutX="186.67" layoutY="295.0" mnemonicParsing="false" onAction="#acaoslot3" prefHeight="50.0" prefWidth="546.67" styleClass="btn-slot" text="criar personagem" />
-      <Button fx:id="btndeletar3" layoutX="746.67" layoutY="395.0" mnemonicParsing="false" onAction="#acaodeletar3" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
+      <Button fx:id="btndeletar3" layoutX="544.0" layoutY="370.0" mnemonicParsing="false" onAction="#acaodeletar3" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
 
       <Button fx:id="btnslot4" layoutX="186.67" layoutY="370.0" mnemonicParsing="false" onAction="#acaoslot4" prefHeight="50.0" prefWidth="546.67" styleClass="btn-slot" text="criar personagem" />
-      <Button fx:id="btndeletar4" layoutX="746.67" layoutY="370.0" mnemonicParsing="false" onAction="#acaodeletar4" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
+      <Button fx:id="btndeletar4" layoutX="544.0" layoutY="295.0" mnemonicParsing="false" onAction="#acaodeletar4" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
 
       <Button fx:id="btnslot5" layoutX="186.67" layoutY="440.0" mnemonicParsing="false" onAction="#acaoslot5" prefHeight="50.0" prefWidth="546.67" styleClass="btn-slot" text="criar personagem" />
-      <Button fx:id="btndeletar5" layoutX="746.67" layoutY="440.0" mnemonicParsing="false" onAction="#acaodeletar5" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
+      <Button fx:id="btndeletar5" layoutX="544.0" layoutY="449.0" mnemonicParsing="false" onAction="#acaodeletar5" prefHeight="50.0" prefWidth="66.67" styleClass="btn-invisivel" />
    </children>
 </AnchorPane>

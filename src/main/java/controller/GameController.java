@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
 
@@ -17,6 +18,7 @@ public class GameController {
     @FXML private ProgressBar barrahpplayer, barrahpinimigo;
     @FXML private TextArea textlogbatalha;
     @FXML private Button btnproximaonda, btnirparaloja, btnataquefisico, btnataquemagico, btnfugir, btnhabilidade1, btnhabilidade2;
+    @FXML private VBox painelvitoria, listadrops;
 
     private player player = model.player.getinstancia();
     private gerenciadordeondas gerenciadorondas = new gerenciadordeondas();
@@ -44,6 +46,10 @@ public class GameController {
         indexinimigo = 0;
         btnproximaonda.setVisible(false);
         btnirparaloja.setVisible(false);
+        if(painelvitoria != null) {
+            painelvitoria.setVisible(false);
+            painelvitoria.setManaged(false);
+        }
         textlogbatalha.setText("batalha iniciada.\n");
 
         carregarproximoinimigo();
@@ -249,6 +255,9 @@ public class GameController {
             textlogbatalha.appendText("derrotado.\n");
             player.addpontos(inimigoatual.getpontos());
             
+            listadrops.getChildren().clear();
+            boolean tevedrop = false;
+            
             double rolagemdrop = Math.random() * 100;
             if (rolagemdrop <= inimigoatual.getchancedrop()) {
                 String drop = inimigoatual.getdrop();
@@ -261,28 +270,36 @@ public class GameController {
                         player.addmagia(drop);
                     }
                     textlogbatalha.appendText("dropou: " + drop + "\n");
+                    Label labeldrop = new Label("drop: " + drop);
+                    labeldrop.setStyle("-fx-text-fill: white;");
+                    listadrops.getChildren().add(labeldrop);
+                    tevedrop = true;
                 }
             }
             
             if (inimigoatual instanceof chefe) {
                 player.addouro(100);
                 textlogbatalha.appendText("chefe derrotado.\n");
+                Label labelouro = new Label("100 ouro");
+                labelouro.setStyle("-fx-text-fill: white;");
+                listadrops.getChildren().add(labelouro);
+                tevedrop = true;
                 SelecaoPersonagemController.chefesderrotados[SelecaoPersonagemController.slotativo]++;
                 if (SelecaoOndaController.ondaselecionada >= SelecaoPersonagemController.ondasliberadas[SelecaoPersonagemController.slotativo]) {
                     SelecaoPersonagemController.ondasliberadas[SelecaoPersonagemController.slotativo] = SelecaoOndaController.ondaselecionada + 1;
                 }
                 SelecaoPersonagemController.niveis[SelecaoPersonagemController.slotativo] = player.getnivel();
-                inimigoatual = null;
-                btnproximaonda.setVisible(true);
-                btnirparaloja.setVisible(true);
-                desativarbotoes();
-                SelecaoPersonagemController.salvardados();
-            } else {
-                SelecaoPersonagemController.heroisderrotados[SelecaoPersonagemController.slotativo]++;
-                SelecaoPersonagemController.salvardados();
-                indexinimigo++;
-                carregarproximoinimigo();
             }
+            
+            if(!tevedrop) {
+                Label semdrop = new Label("nenhum item");
+                semdrop.setStyle("-fx-text-fill: white;");
+                listadrops.getChildren().add(semdrop);
+            }
+            
+            painelvitoria.setVisible(true);
+            painelvitoria.setManaged(true);
+            desativarbotoes();
         }
     }
 
@@ -416,6 +433,14 @@ public class GameController {
         btnhabilidade1.setDisable(true);
         btnhabilidade2.setDisable(true);
     }
+    
+    private void reativarbotoes() {
+        btnataquefisico.setDisable(false);
+        btnataquemagico.setDisable(false);
+        btnfugir.setDisable(false);
+        btnhabilidade1.setDisable(false);
+        btnhabilidade2.setDisable(false);
+    }
 
     @FXML public void acaoproximaonda(ActionEvent e) {
         if (SelecaoOndaController.ondaselecionada < 6) {
@@ -423,5 +448,29 @@ public class GameController {
             trocartela("/view/gameplay.fxml");
         }
     }
+    
     @FXML public void acaoirparaloja(ActionEvent e) { trocartela("/view/loja.fxml"); }
+    
+    @FXML public void acaocontinuar(ActionEvent e) {
+        painelvitoria.setVisible(false);
+        painelvitoria.setManaged(false);
+        reativarbotoes();
+        
+        if (inimigoatual instanceof chefe) {
+            inimigoatual = null;
+            btnproximaonda.setVisible(true);
+            btnirparaloja.setVisible(true);
+            desativarbotoes();
+            SelecaoPersonagemController.salvardados();
+        } else {
+            SelecaoPersonagemController.heroisderrotados[SelecaoPersonagemController.slotativo]++;
+            SelecaoPersonagemController.salvardados();
+            indexinimigo++;
+            carregarproximoinimigo();
+        }
+    }
+    
+    @FXML public void acaofugirbatalha(ActionEvent e) {
+        trocartela("/view/selecaoonda.fxml");
+    }
 }
