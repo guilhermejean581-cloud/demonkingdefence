@@ -42,17 +42,14 @@ public class InventarioController {
                         String textobtn = btn.getText();
                         if (textobtn != null) {
                             
-                            // Remove todos os espacos vazios para garantir que encontre os botoes
                             String txt = textobtn.replaceAll("\\s+", "").toLowerCase();
                             
-                            if (txt.equals("+") || 
+                            if (txt.contains("+") || 
                                 txt.equals("-") || 
                                 txt.contains("equipar") || 
                                 txt.contains("desbloquear")) {
                                 
                                 btn.setVisible(true);
-                                btn.setText(""); 
-                                btn.setStyle("-fx-background-color: rgba(0,0,0,0.02); -fx-border-color: transparent; -fx-cursor: hand;");
                                 btn.setOpacity(0.0); 
                                 btn.toFront();
                             }

@@ -138,9 +138,9 @@ public class GameController {
 
     private void processaracaoplayer(String acao) {
         String arma = player.getarmaequipada();
-        int basearma = 20;
+        int basearma = 25;
         if(arma.equals("machado de guerra")) basearma = 35;
-        else if(arma.equals("arco rapido")) basearma = 25;
+        else if(arma.equals("arco rapido")) basearma = 30;
         else if(arma.equals("espada de honra")) basearma = 50;
         else if(arma.equals("espada nobre")) basearma = 60;
         else if(arma.equals("arco magico")) basearma = 60;
@@ -457,12 +457,15 @@ public class GameController {
         reativarbotoes();
         
         if (inimigoatual instanceof chefe) {
+            textlogbatalha.clear(); 
+            textlogbatalha.appendText("onda concluida. chefe derrotado.\n");
             inimigoatual = null;
             btnproximaonda.setVisible(true);
             btnirparaloja.setVisible(true);
             desativarbotoes();
             SelecaoPersonagemController.salvardados();
         } else {
+            textlogbatalha.clear(); // Limpa o log de batalha para reiniciar a cada inimigo 
             SelecaoPersonagemController.heroisderrotados[SelecaoPersonagemController.slotativo]++;
             SelecaoPersonagemController.salvardados();
             indexinimigo++;
